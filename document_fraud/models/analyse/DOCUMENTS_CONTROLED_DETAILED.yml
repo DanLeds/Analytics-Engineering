@@ -4,7 +4,7 @@ models:
 - name: DOCUMENTS_CONTROLED_DETAILED
   description: This model is the join of tables DOCUMENTS_CREATED and DOCUMENTS_CONTROLED. 
   meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
+    owner: Fraud Team / dan_leds@document_fraud.com 
   tests:  
   - unique:  
       column_name: event_creation_document_id
