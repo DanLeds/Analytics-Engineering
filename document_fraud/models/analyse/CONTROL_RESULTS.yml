@@ -1,0 +1,31 @@
+version: 2
+models:
+
+- name: CONTROL_RESULTS
+  description: This model shows results of controls by document and by channel acquisition 
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:  
+  - unique:    
+      column_name: unique_key
+  columns: 
+    - name: document_id 
+      description: the document identifier control checked 
+      tests:  
+        - not_null 
+    - name: control_status
+      description: the result of the control (OK, KO, NA, NULL)
+    - name: control_name
+      description: the name of the control
+    - name: channel_acquisition_id
+      description: The client where the document was sent
+    - name: document_category
+      description: document category (ID_CARD, PASSPORT...)
+    - name: document_issuing_country
+      description: the issuing country of the document
+    - name: document_issue_year
+      description: the year of document issued
+    - name: issue_at
+      description: the timestamp of the control done  
+
+  

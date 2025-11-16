@@ -1,0 +1,59 @@
+version: 2
+models:
+
+- name: DOCUMENTS_CONTROLED_DETAILED
+  description: This model is the join of tables DOCUMENTS_CREATED and DOCUMENTS_CONTROLED. 
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:  
+  - unique:  
+      column_name: event_creation_document_id
+  columns:
+    - name: event_creation_document_id
+      description: the unique id of the event of the document creation
+    - name: document_id
+      description: The unique id of the document created
+      tests:
+        - not_null 
+    - name: document_receipt_at
+      description: timestamp of recept of the document
+    - name: document_controled_issue_at
+      description: timestamp of issue of the document after control
+    - name: document_channel_acquisition_id
+      description: The id of the channel acquisition where the document was created (challenge, upload...)
+    - name: acquisition_type
+      description: How the document was supplied (file upload or phone scan)
+    - name: document_subtype
+      description: Subtype of the document with category (ID_CARD, PASSPORT...), issuing country (FRA), document date (2021)
+    - name: document_category
+      description: document category (ID_CARD, PASSPORT...)
+    - name: document_issuing_country
+      description: the issuing country of the document
+    - name: document_issue_year
+      description: the year of document issued
+    - name: event_control_id
+      description: the unique id of the event of the document creation
+    - name: control_applied_status
+      description: the status of control applied
+    - name: control_receipt_at
+      description: timestamp of recept of the document
+    - name: control_score
+      description: Score category of the document controlled
+    - name: control_controled_issue_at
+      description: timestamp of issue of the document after control 
+    - name: control_status
+      description: The status of the control after application to the document
+    - name: control_scores
+      description: category of control for the document.
+    - name: document_face_id
+      description: the id of the document face (recto, verso) 
+    - name: document_type
+      description: if is the document face or else
+    - name: control_domain
+      description: if it is kyc or else
+    - name: control_channel_acquisition_id
+      description: where comes from the applicant (client1, client2...)
+    - name: control_subject
+      description: the control is exercised over the applicant or the document
+    - name: control_name
+      description: the specific area where the control is exercised

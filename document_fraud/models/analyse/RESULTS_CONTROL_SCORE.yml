@@ -1,0 +1,55 @@
+version: 2
+models:
+
+- name: RESULTS_CONTROL_SCORE
+  description: This model shows results of controls by different scores
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:       
+  - unique:        
+      column_name: unique_key
+  columns:   
+    - name: control_score    
+      description: the name of the score control
+      tests:     
+        - not_null  
+
+    - name: total_documents
+      description: total count of documents
+    - name: count_ok
+      description: count of ok score control
+    - name: perc_ok
+      description: percentage of ok score control
+    - name: count_ko
+      description: count of ko score control
+    - name: perc_ko
+      description: percentage of ko score control
+    - name: count_na
+      description: count of not available score control
+    - name: perc_na
+      description: percentage of not available score control
+    - name: count_null
+      description: count of null value score control
+    - name: perc_nul
+      description: percentage of null value score control
+    - name: first_issue_date
+      description: date of the first issue control
+    - name: last_issue_date
+      description: date of the last issue control
+    - name: days_span
+      description: number of days between the first issue date and the last issue date
+    - name: unique_categories
+      description: count of unique categories of document
+    - name: unique_countries
+      description: count of unique countries of document
+    - name: metrics_json
+      description: all metrics in jsonb format 
+    - name: created_at
+      description: timestamp of the creation of the control
+    - name: snapshot_date
+      description: date of the control
+
+
+
+
+

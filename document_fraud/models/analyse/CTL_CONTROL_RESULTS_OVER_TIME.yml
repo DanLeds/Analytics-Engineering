@@ -1,0 +1,140 @@
+version: 2
+models:
+
+- name: CTL_CONTROL_RESULTS_OVER_TIME_
+  description: This model shows results of controls by name CTLxx overt time by category document and client acquisition
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:       
+  - unique:        
+      column_name: unique_key
+  columns:   
+    - name: issue_date    
+      description: the timestamp of the control done
+      tests:     
+        - not_null              
+    - name: channel_acquisition_id
+      description: The client where the document was sent
+    - name: document_category
+      description: document category (ID_CARD, PASSPORT...)
+      
+    - name: ctl01_count_document
+      description: controle name CTL01_ADDRESS_CONSISTENCY, count of the document checked by this control
+    - name: ctl01_count_ok
+      description: controle name CTL01_ADDRESS_CONSISTENCY, count of OK results by this control
+    - name: ctl01_count_ko
+      description: controle name CTL01_ADDRESS_CONSISTENCY, count of KO results by this control
+    - name: ctl01_count_na
+      description: controle name CTL01_ADDRESS_CONSISTENCY, count of NA results by this control
+    - name: ctl01_count_null
+      description: controle name CTL01_ADDRESS_CONSISTENCY, count of NULL results by this control
+
+    - name: ctl02_count_document
+      description: controle name CTL02_ADDRESS_LOCALITY_CONSISTENCY, count of the document checked by this control
+    - name: ctl02_count_ok
+      description: controle name CTL02_ADDRESS_LOCALITY_CONSISTENCY, count of OK results by this control
+    - name: ctl02_count_ko
+      description: controle name CTL02_ADDRESS_LOCALITY_CONSISTENCY, count of KO results by this control
+    - name: ctl02_count_na
+      description: controle name CTL02_ADDRESS_LOCALITY_CONSISTENCY, count of NA results by this control
+    - name: ctl02_count_null
+      description: controle name CTL02_ADDRESS_LOCALITY_CONSISTENCY, count of NULL results by this control
+
+    - name: ctl03_count_document
+      description: controle name CTL03_ALTERNATE_FAMILY_NAME_CONSISTENCY, count of the document checked by this control
+    - name: ctl03_count_ok
+      description: controle name CTL03_ALTERNATE_FAMILY_NAME_CONSISTENCY, count of OK results by this control
+    - name: ctl03_count_ko
+      description: controle name CTL03_ALTERNATE_FAMILY_NAME_CONSISTENCY, count of KO results by this control
+    - name: ctl03_count_na
+      description: controle name CTL03_ALTERNATE_FAMILY_NAME_CONSISTENCY, count of NA results by this control
+    - name: ctl03_count_null
+      description: controle name CTL03_ALTERNATE_FAMILY_NAME_CONSISTENCY, count of NULL results by this control
+
+    - name: ctl04_count_document
+      description: controle name CTL04_ALTERNATE_FAMILY_NAME_DETECTION, count of the document checked by this control
+    - name: ctl04_count_ok
+      description: controle name CTL04_ALTERNATE_FAMILY_NAME_DETECTION, count of OK results by this control
+    - name: ctl04_count_ko
+      description: controle name CTL04_ALTERNATE_FAMILY_NAME_DETECTION, count of KO results by this control
+    - name: ctl04_count_na
+      description: controle name CTL04_ALTERNATE_FAMILY_NAME_DETECTION, count of NA results by this control
+    - name: ctl04_count_null
+      description: controle name CTL04_ALTERNATE_FAMILY_NAME_DETECTION, count of NULL results by this control
+
+    - name: ctl05_count_document
+      description: controle name CTL05_BIC_IBAN_CONSISTENCY, count of the document checked by this control
+    - name: ctl05_count_ok
+      description: controle name CTL05_BIC_IBAN_CONSISTENCY, count of OK results by this control
+    - name: ctl05_count_ko
+      description: controle name CTL05_BIC_IBAN_CONSISTENCY, count of KO results by this control
+    - name: ctl05_count_na
+      description: controle name CTL05_BIC_IBAN_CONSISTENCY, count of NA results by this control
+    - name: ctl05_count_null
+      description: controle name CTL05_BIC_IBAN_CONSISTENCY, count of NULL results by this control  
+
+    - name: ctl06_count_document
+      description: controle name CTL06_BIRTHDATE_MRZ_CONSISTENCY, count of the document checked by this control
+    - name: ctl06_count_ok
+      description: controle name CTL06_BIRTHDATE_MRZ_CONSISTENCY, count of OK results by this control
+    - name: ctl06_count_ko
+      description: controle name CTL06_BIRTHDATE_MRZ_CONSISTENCY, count of KO results by this control
+    - name: ctl06_count_na
+      description: controle name CTL06_BIRTHDATE_MRZ_CONSISTENCY, count of NA results by this control
+    - name: ctl06_count_null
+      description: controle name CTL06_BIRTHDATE_MRZ_CONSISTENCY, count of NULL results by this control  
+
+    - name: ctl07_count_document
+      description: controle name CTL07_DATE_VALIDATION, count of the document checked by this control
+    - name: ctl07_count_ok
+      description: controle name CTL07_DATE_VALIDATION, count of OK results by this control
+    - name: ctl07_count_ko
+      description: controle name CTL07_DATE_VALIDATION, count of KO results by this control
+    - name: ctl07_count_na
+      description: controle name CTL07_DATE_VALIDATION, count of NA results by this control
+    - name: ctl07_count_null
+      description: controle name CTL07_DATE_VALIDATION, count of NULL results by this control  
+
+    - name: ctl08_count_document
+      description: controle name CTL08_FAMILY_NAME_ACCOUNT_HOLDER_SEARCH, count of the document checked by this control
+    - name: ctl08_count_ok
+      description: controle name CTL08_FAMILY_NAME_ACCOUNT_HOLDER_SEARCH, count of OK results by this control
+    - name: ctl08_count_ko
+      description: controle name CTL08_FAMILY_NAME_ACCOUNT_HOLDER_SEARCH, count of KO results by this control
+    - name: ctl08_count_na
+      description: controle name CTL08_FAMILY_NAME_ACCOUNT_HOLDER_SEARCH, count of NA results by this control
+    - name: ctl08_count_null
+      description: controle name CTL08_FAMILY_NAME_ACCOUNT_HOLDER_SEARCH, count of NULL results by this control  
+
+    - name: ctl09_count_document
+      description: controle name CTL09_FAMILY_NAME_CONSISTENCY, count of the document checked by this control
+    - name: ctl09_count_ok
+      description: controle name CTL09_FAMILY_NAME_CONSISTENCY, count of OK results by this control
+    - name: ctl09_count_ko
+      description: controle name CTL09_FAMILY_NAME_CONSISTENCY, count of KO results by this control
+    - name: ctl09_count_na
+      description: controle name CTL09_FAMILY_NAME_CONSISTENCY, count of NA results by this control
+    - name: ctl09_count_null
+      description: controle name CTL09_FAMILY_NAME_CONSISTENCY, count of NULL results by this control  
+
+    - name: ctl10_count_document
+      description: controle name CTL10_FAMILY_NAME_SEARCH, count of the document checked by this control
+    - name: ctl10_count_ok
+      description: controle name CTL10_FAMILY_NAME_SEARCH, count of OK results by this control
+    - name: ctl10_count_ko
+      description: controle name CTL10_FAMILY_NAME_SEARCH, count of KO results by this control
+    - name: ctl10_count_na
+      description: controle name CTL10_FAMILY_NAME_SEARCH, count of NA results by this control
+    - name: ctl10_count_null
+      description: controle name CTL10_FAMILY_NAME_SEARCH, count of NULL results by this control  
+
+    - name: ctl11_count_document
+      description: controle name CTL11_PERSONAL_ID_CONSISTENCY, count of the document checked by this control
+    - name: ctl11_count_ok
+      description: controle name CTL11_PERSONAL_ID_CONSISTENCY, count of OK results by this control
+    - name: ctl11_count_ko
+      description: controle name CTL11_PERSONAL_ID_CONSISTENCY, count of KO results by this control
+    - name: ctl11_count_na
+      description: controle name CTL11_PERSONAL_ID_CONSISTENCY, count of NA results by this control
+    - name: ctl11_count_null
+      description: controle name CTL11_PERSONAL_ID_CONSISTENCY, count of NULL results by this control  

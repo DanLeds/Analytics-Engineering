@@ -1,0 +1,40 @@
+version: 2
+models:
+
+- name: V_CONTROL_MONTHLY_TRENDS
+  description: This view shows evolution control by month
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:  
+  - unique:    
+      column_name: unique_key
+  columns: 
+    - name: issue_month_date 
+      description: the month date of control issue
+      tests:  
+        - not_null 
+    - name: control_score  
+      description: the name of the control score
+    - name: control_name
+    - name: total_count
+      description: total count of documents
+    - name: count_ok
+      description: count of ok score control
+    - name: count_ko
+      description: count of ko score control
+    - name: count_na
+      description: count of not available score control 
+    - name: count_null
+      description: count of null value score control
+    - name: perc_ok
+      description: percentage of ok score control
+    - name: perc_ko
+      description: percentage of ko score control
+    - name: prev_month_count
+      description: previous month count of documents
+    - name: mom_change
+      description: month over month change
+    - name: mom_growth_pct
+      description: month over month growth percentage
+
+      

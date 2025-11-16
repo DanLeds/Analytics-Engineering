@@ -1,0 +1,70 @@
+version: 2
+models:
+
+- name: RESULTS_CONTROL_SCORE_2
+  description: This model shows results of controls by different scores
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:       
+  - unique:        
+      column_name: unique_key
+  columns:   
+    - name: control_score    
+      description: the name of the score control
+      tests:     
+         - not_null  
+         - accepted_values:
+             values: 
+                - 'advanced'
+                - 'ADVANCEDPF'
+                - 'efficient'
+                - 'EFFICIENTPF'
+                - 'EFFICIENTPLUS'
+                - 'jdiEfficientPlus'
+                - 'standard'
+                - 'STANDARDPF'
+                - 'STANDARDPLUS'
+                - 'controlna'
+    - name: control_status
+      description: the final status of the control (OK, KO, NA, NULL)
+      tests:
+         - not_null
+         - accepted_values:
+             values: ['OK', 'KO', 'NA', 'NULL']
+    - name: document_count
+      description: count of documents by control score and control status 
+      tests:
+         - not_null
+    - name: total_documents
+      description: total count of documents by control score and control status
+      tests:
+        - not_null
+    - name: percentage
+      description: percentage of ontrol score and control status
+      tests:
+        - not_null
+    - name: first_issue_date
+      description: date of the first issue control
+    - name: last_issue_date
+      description: date of the last issue control
+    - name: days_span
+      description: number of days between the first issue date and the last issue date
+    - name: unique_categories
+      description: count of unique categories of document
+    - name: unique_countries
+      description: count of unique countries of document
+    - name: unique_control_names
+      description: count of unique control name
+    - name: unique_channels
+      description: count of unique channels
+    - name: metrics_json
+      description: all metrics in jsonb format
+    - name: metrics_json
+      description: all metrics in jsonb format
+    - name: created_at
+      description: timestamp of the creation of the control
+    - name: snapshot_date
+      description: date of the control
+      tests:
+        - not_null
+

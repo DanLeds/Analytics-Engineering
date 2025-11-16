@@ -1,0 +1,35 @@
+version: 2
+models:
+
+- name: DOCUMENT_CREATED
+  description: This model compiles all documents uploaded by a user. Each row is an event of one document created. A user can upload several different documents or several time one document.
+  meta:
+    owner: Fraud Team / dan_leds@document_fraud.com
+  tests:  
+  - unique:  
+      column_name: event_id
+  columns:
+    - name: event_id
+      description: the unique id of the event of the document creation
+    - name: receipt_at
+      description: timestamp of recept of the document
+    - name: issue_at
+      description: timestamp of issue of the document after control
+    - name: document_id
+      description: The unique id of the document created
+      tests:
+        - not_null 
+    - name: channel_acquisition_id
+      description: The id of the channel acquisition where the document was created (challenge, upload...)
+    - name: acquisition_type
+      description: How the document was supplied (file upload or phone scan)
+    - name: document_subtype
+      description: Subtype of the document with category (ID_CARD, PASSPORT...), issuing country (FRA), document date (2021)
+    - name: document_category
+      description: document category (ID_CARD, PASSPORT...)
+    - name: document_issuing_country
+      description: the issuing country of the document
+    - name: document_issue_year
+      description: the year of document issued
+
+

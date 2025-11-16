@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: CONTROLS           
+    schema: public
+    database: postgres
+    tables:
+      - name: test_technique_ae_document_controlled
+        columns: 
+        - name: data_documentcontrolsdata_documentcontrols_anonymized
+        - name: data_documentcontrolsdata_documentfaceids
+        - name: data_documentcontrolsdata_status
+        - name: data_eventdate 
+        - name: doc_id
+        - name: data_score
+        - name: id
+        - name: time
+
+  - name: CREATION   
+    schema: public
+    database: postgres
+    tables:
+      - name: test_technique_ae_document_created 
+        columns: 
+        - name: data_id_id
+        - name: data_acquisitionid_organizationid
+        - name: data_documentclass_documentsubtype
+        - name: data_documentclass_documenttype
+        - name: data_eventdate
+        - name: id
+        - name: time
