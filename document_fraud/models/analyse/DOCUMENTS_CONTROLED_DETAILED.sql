@@ -3,7 +3,7 @@
     incremental_strategy='delete+insert',
     unique_key='unique_key',
     on_schema_change='append_new_columns',
-    tags=["nightly_1"]
+    tags=["nightly_1"] 
 ) }}
 
 with fusion as (
