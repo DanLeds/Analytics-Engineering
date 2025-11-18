@@ -1,0 +1,15 @@
+# Force GitHub Linguist to detect all languages in the repository
+
+# Ensure SQL files are detected
+*.sql linguist-detectable=true
+
+# Ensure YAML files are detected
+*.yml linguist-detectable=true
+*.yaml linguist-detectable=true
+
+# Don't exclude dbt project files
+dbt_project.yml linguist-detectable=true
+
+# Prevent vendored/generated files from being counted (if needed)
+# dbt_packages/** linguist-vendored=true
+# target/** linguist-generated=true
