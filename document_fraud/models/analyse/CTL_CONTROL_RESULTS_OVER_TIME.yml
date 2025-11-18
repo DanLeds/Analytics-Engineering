@@ -10,7 +10,7 @@ models:
       column_name: unique_key
   columns:   
     - name: issue_date    
-      description: the timestamp of the control done
+      description: the timestamp of the control done 
       tests:     
         - not_null              
     - name: channel_acquisition_id

@@ -10,7 +10,7 @@
 with DATE_AND_CLIENT as (
 select 
     issue_date,
-    channel_acquisition_id,
+    channel_acquisition_id, 
     document_category
 from generate_series('2025-01-01', current_date, interval '1 month') as issue_date,
      unnest(array['client 1', 'client 2', 'client na']) as channel_acquisition_id,
