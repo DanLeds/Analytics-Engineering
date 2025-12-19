@@ -1,6 +1,6 @@
 # 🏗️ Analytics Engineering
 
-The Art of Data Modeling for Real-World Analytics & ML
+## The Art of Data Modeling for Real-World Analytics & ML
 
 This repository showcases a collection of Analytics Engineering projects.
 
@@ -8,9 +8,9 @@ In real companies, data is rarely clean, structured, or directly usable.
 Kaggle datasets are not real life.
 
 Analytics Engineering bridges the gap between:
-	- raw, messy operational data
-	- reliable analytics
-	- production-ready Machine Learning
+- raw, messy operational data
+- reliable analytics
+- production-ready Machine Learning
 
 Well-designed data models are the foundation of:
 	- trustworthy dashboards
