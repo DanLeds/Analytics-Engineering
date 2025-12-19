@@ -1,6 +1,6 @@
 # Analytics Engineering
 
-Real-world data modeling for analytics & ML.
+*Real-world data modeling for analytics & ML.*
 
 Messy data in.  
 Reliable models out.
