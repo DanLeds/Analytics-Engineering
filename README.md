@@ -41,6 +41,7 @@ Early detection reduces downstream risk.
 ## Stack
 
 - SQL
+- Postgres
 - dbt
 - analytics engineering practices
 
