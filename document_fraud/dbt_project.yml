@@ -1,4 +1,4 @@
-name: 'quicksign_project'
+name: 'document_fraud'
 version: '1.0.0'
 config-version: 2
 
@@ -46,7 +46,7 @@ vars:
     - 'personal_id_consistency'
 
 models:
-  quicksign_project:
+  document_fraud:
     staging:
       +materialized: view
       +tags: ["staging"]
