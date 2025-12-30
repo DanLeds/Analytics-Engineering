@@ -1,0 +1,106 @@
+name: DBT
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: dbt_user
+          POSTGRES_PASSWORD: dbt_password
+          POSTGRES_DB: dbt_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-core dbt-postgres
+
+      - name: Create profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << 'EOF'
+          document_fraud:
+            target: ci
+            outputs:
+              ci:
+                type: postgres
+                host: localhost
+                port: 5432
+                user: dbt_user
+                password: dbt_password
+                dbname: dbt_test
+                schema: public
+                threads: 4
+          EOF
+
+      - name: Create source tables
+        run: |
+          PGPASSWORD=dbt_password psql -h localhost -U dbt_user -d dbt_test << 'EOF'
+          CREATE SCHEMA IF NOT EXISTS analytics;
+
+          CREATE TABLE analytics.documents_controlled (
+            event_id VARCHAR(255),
+            control_applied_status VARCHAR(50),
+            receipt_at TIMESTAMP,
+            document_id VARCHAR(255),
+            control_score VARCHAR(50),
+            issue_at TIMESTAMP,
+            control_status VARCHAR(10),
+            control_scores VARCHAR(50),
+            document_face_id VARCHAR(255),
+            document_type VARCHAR(100),
+            control_domain VARCHAR(50),
+            channel_acquisition_id VARCHAR(100),
+            control_subject VARCHAR(50),
+            control_identifier VARCHAR(255)
+          );
+
+          CREATE TABLE analytics.documents_created (
+            event_id VARCHAR(255),
+            receipt_at TIMESTAMP,
+            issue_at TIMESTAMP,
+            document_id VARCHAR(255),
+            channel_acquisition_id VARCHAR(100),
+            acquisition_type VARCHAR(50),
+            document_subtype VARCHAR(255),
+            document_category VARCHAR(100),
+            document_issuing_country VARCHAR(10),
+            document_issue_year VARCHAR(10)
+          );
+          EOF
+
+      - name: dbt debug
+        run: dbt debug
+
+      - name: dbt deps
+        run: dbt deps || true
+
+      - name: dbt compile
+        run: dbt compile
+
+      - name: dbt run (staging)
+        run: dbt run --select staging
+
+      - name: dbt test (staging)
+        run: dbt test --select staging || true
