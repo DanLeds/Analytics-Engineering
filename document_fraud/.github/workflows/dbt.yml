@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, master]
 
+defaults:
+  run:
+    working-directory: document_fraud
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -34,9 +38,11 @@ jobs:
           python-version: '3.11'
 
       - name: Install dbt
+        working-directory: .
         run: pip install dbt-core dbt-postgres
 
       - name: Create profiles.yml
+        working-directory: .
         run: |
           mkdir -p ~/.dbt
           cat > ~/.dbt/profiles.yml << 'EOF'
@@ -55,6 +61,7 @@ jobs:
           EOF
 
       - name: Create source tables
+        working-directory: .
         run: |
           PGPASSWORD=dbt_password psql -h localhost -U dbt_user -d dbt_test << 'EOF'
           CREATE SCHEMA IF NOT EXISTS analytics;
