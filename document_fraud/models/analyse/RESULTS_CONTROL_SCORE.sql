@@ -1,9 +1,7 @@
 {{ config(
     materialized='table',
-    tags=["nightly_1"], 
-    labels={
-      "table_type": "fact_table"
-    },
+    tags=["nightly_1"],
+    labels={"table_type": "fact_table"},
     indexes=[
         {'columns': ['control_score'], 'type': 'btree'},
         {'columns': ['last_issue_date'], 'type': 'brin'},
@@ -17,96 +15,87 @@
     ]
 ) }}
 
-WITH BASE AS (
-    SELECT 
-        DISTINCT ON (co.document_id, co.control_score)
+with base as (
+    select
+        distinct on (co.document_id, co.control_score)
         co.document_id,
         co.control_status,
         co.issue_at::timestamptz,
-        COALESCE(co.control_score, 'controlna') AS control_score,
+        coalesce(co.control_score, 'controlna') as control_score,
         co.control_name,
         co.channel_acquisition_id,
         cr.document_category,
         cr.document_issuing_country,
         cr.document_issue_year
-    FROM {{ref('V_STG_DOCUMENTS_CONTROLLED')}} co
-    --from analytics."V_STG_DOCUMENTS_CONTROLLED" co
-    LEFT JOIN {{ref('V_STG_DOCUMENTS_CREATED')}} cr
-    --left join analytics."V_STG_DOCUMENTS_CREATED" cr
-        USING(document_id)
-    where 1 = 1 
-        and co.issue_at::date >= CURRENT_DATE - INTERVAL '730 days'
-    ORDER BY co.document_id, co.control_score, co.issue_at DESC
+    from {{ ref('V_STG_DOCUMENTS_CONTROLLED') }} co
+    left join {{ ref('V_STG_DOCUMENTS_CREATED') }} cr
+        using (document_id)
+    where {{ lookback_filter('co.issue_at') }}
+    order by co.document_id, co.control_score, co.issue_at desc
 ),
--- Agrégations avec FILTER pour PostgreSQL
-AGGREGATED_METRICS AS (
-    SELECT 
+
+aggregated_metrics as (
+    select
         control_score,
-        COUNT(DISTINCT document_id) AS total_documents,
-        COUNT(DISTINCT document_id) FILTER (WHERE control_status = 'OK') AS count_ok,
-        COUNT(DISTINCT document_id) FILTER (WHERE control_status = 'KO') AS count_ko,
-        COUNT(DISTINCT document_id) FILTER (WHERE control_status = 'NA') AS count_na,
-        COUNT(DISTINCT document_id) FILTER (WHERE control_status IS NULL) AS count_null,
-        -- Stats simples avec fonctions standards
-        MAX(issue_at)::DATE AS last_issue_date,
-        MIN(issue_at)::DATE AS first_issue_date,
-        COUNT(DISTINCT document_category) AS unique_categories,
-        COUNT(DISTINCT document_issuing_country) AS unique_countries
-    FROM BASE
-    where 1 = 1
-    GROUP BY control_score
+        count(distinct document_id) as total_documents,
+        count(distinct document_id) filter (where control_status = 'OK') as count_ok,
+        count(distinct document_id) filter (where control_status = 'KO') as count_ko,
+        count(distinct document_id) filter (where control_status = 'NA') as count_na,
+        count(distinct document_id) filter (where control_status is null) as count_null,
+        max(issue_at)::date as last_issue_date,
+        min(issue_at)::date as first_issue_date,
+        count(distinct document_category) as unique_categories,
+        count(distinct document_issuing_country) as unique_countries
+    from base
+    group by control_score
 ),
-FINAL_RESULT AS (
-    SELECT 
+
+final_result as (
+    select
         control_score,
         total_documents,
         count_ok,
         count_ko,
         count_na,
         count_null,
-        -- Calcul des pourcentages sécurisé
-        ROUND(100.0 * count_ok / GREATEST(total_documents, 1), 2) AS perc_ok,
-        ROUND(100.0 * count_ko / GREATEST(total_documents, 1), 2) AS perc_ko,
-        ROUND(100.0 * count_na / GREATEST(total_documents, 1), 2) AS perc_na,
-        ROUND(100.0 * count_null / GREATEST(total_documents, 1), 2) AS perc_null,
-        -- Informations temporelles
+        {{ calculate_percentage('count_ok', 'total_documents') }} as perc_ok,
+        {{ calculate_percentage('count_ko', 'total_documents') }} as perc_ko,
+        {{ calculate_percentage('count_na', 'total_documents') }} as perc_na,
+        {{ calculate_percentage('count_null', 'total_documents') }} as perc_null,
         first_issue_date,
         last_issue_date,
-        last_issue_date - first_issue_date AS days_span,
-        -- Métadonnées
+        last_issue_date - first_issue_date as days_span,
         unique_categories,
         unique_countries,
-        NOW() AT TIME ZONE 'UTC' AS created_at,
-        CURRENT_DATE AS snapshot_date,
-        -- Clé unique
-        MD5(control_score || '|' || CURRENT_DATE::text) AS unique_key,
-        -- JSONB pour métriques flexibles
-        JSONB_BUILD_OBJECT(
-            'counts', JSONB_BUILD_OBJECT(
+        now() at time zone 'UTC' as created_at,
+        current_date as snapshot_date,
+        md5(control_score || '|' || current_date::text) as unique_key,
+        jsonb_build_object(
+            'counts', jsonb_build_object(
                 'ok', count_ok,
                 'ko', count_ko,
                 'na', count_na,
                 'null', count_null,
                 'total', total_documents
             ),
-            'percentages', JSONB_BUILD_OBJECT(
-                'ok_pct', ROUND(100.0 * count_ok / GREATEST(total_documents, 1), 2),
-                'ko_pct', ROUND(100.0 * count_ko / GREATEST(total_documents, 1), 2),
-                'na_pct', ROUND(100.0 * count_na / GREATEST(total_documents, 1), 2),
-                'null_pct', ROUND(100.0 * count_null / GREATEST(total_documents, 1), 2)
+            'percentages', jsonb_build_object(
+                'ok_pct', {{ calculate_percentage('count_ok', 'total_documents') }},
+                'ko_pct', {{ calculate_percentage('count_ko', 'total_documents') }},
+                'na_pct', {{ calculate_percentage('count_na', 'total_documents') }},
+                'null_pct', {{ calculate_percentage('count_null', 'total_documents') }}
             ),
-            'metadata', JSONB_BUILD_OBJECT(
+            'metadata', jsonb_build_object(
                 'first_date', first_issue_date,
                 'last_date', last_issue_date,
                 'days_span', last_issue_date - first_issue_date,
                 'unique_categories', unique_categories,
                 'unique_countries', unique_countries
             )
-        ) AS metrics_json
-    FROM AGGREGATED_METRICS
-    where 1 = 1
+        ) as metrics_json
+    from aggregated_metrics
 )
-SELECT 
+
+select
     control_score,
     total_documents,
     count_ok,
@@ -126,6 +115,5 @@ SELECT
     created_at,
     snapshot_date,
     unique_key
-FROM FINAL_RESULT
-where 1 = 1
-ORDER BY control_score 
+from final_result
+order by control_score

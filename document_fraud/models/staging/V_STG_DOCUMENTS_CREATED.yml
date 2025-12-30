@@ -1,35 +1,52 @@
 version: 2
+
 models:
-
-- name: DOCUMENT_CREATED
-  description: This model compiles all documents uploaded by a user. Each row is an event of one document created. A user can upload several different documents or several time one document.
-  meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
-  tests:  
-  - unique:  
-      column_name: event_id
-  columns:
-    - name: event_id
-      description: the unique id of the event of the document creation
-    - name: receipt_at
-      description: timestamp of recept of the document
-    - name: issue_at
-      description: timestamp of issue of the document after control
-    - name: document_id
-      description: The unique id of the document created
-      tests:
-        - not_null 
-    - name: channel_acquisition_id
-      description: The id of the channel acquisition where the document was created (challenge, upload...)
-    - name: acquisition_type
-      description: How the document was supplied (file upload or phone scan)
-    - name: document_subtype
-      description: Subtype of the document with category (ID_CARD, PASSPORT...), issuing country (FRA), document date (2021)
-    - name: document_category
-      description: document category (ID_CARD, PASSPORT...)
-    - name: document_issuing_country
-      description: the issuing country of the document
-    - name: document_issue_year
-      description: the year of document issued
-
-
+  - name: V_STG_DOCUMENTS_CREATED
+    description: >
+      Staging model that compiles all documents uploaded by users.
+      Each row represents a document creation event. A user can upload
+      several different documents or the same document multiple times.
+    meta:
+      owner: Fraud Team / dan_leds@document_fraud.com
+    columns:
+      - name: event_id
+        description: Unique identifier for the document creation event
+        tests:
+          - unique
+          - not_null
+      - name: receipt_at
+        description: Timestamp when the document was received
+      - name: issue_at
+        description: Timestamp when the document was issued after processing
+      - name: document_id
+        description: Unique identifier of the document created
+        tests:
+          - not_null
+      - name: channel_acquisition_id
+        description: ID of the acquisition channel where the document was created (challenge, upload, etc.)
+      - name: acquisition_type
+        description: How the document was supplied (file upload or phone scan)
+      - name: document_subtype
+        description: Full document subtype including category, issuing country, and year
+      - name: document_category
+        description: Document category (id_card, passport, driving_license, etc.)
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'address_proof'
+                  - 'bank_account_details'
+                  - 'digitalid'
+                  - 'driving_license'
+                  - 'id_card'
+                  - 'open_banking'
+                  - 'passport'
+                  - 'payslip'
+                  - 'residence_permit'
+                  - 'tax_document'
+              config:
+                severity: warn
+      - name: document_issuing_country
+        description: Three-letter code of the document issuing country
+      - name: document_issue_year
+        description: Year the document was issued (extracted from subtype)
