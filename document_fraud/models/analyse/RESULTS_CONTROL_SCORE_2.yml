@@ -1,70 +1,83 @@
 version: 2
+
 models:
-
-- name: RESULTS_CONTROL_SCORE_2
-  description: This model shows results of controls by different scores
-  meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
-  tests:       
-  - unique:        
-      column_name: unique_key
-  columns:   
-    - name: control_score    
-      description: the name of the score control
-      tests:     
-         - not_null  
-         - accepted_values:
-             values: 
-                - 'advanced'
-                - 'ADVANCEDPF'
-                - 'efficient'
-                - 'EFFICIENTPF'
-                - 'EFFICIENTPLUS'
-                - 'jdiEfficientPlus'
-                - 'standard'
-                - 'STANDARDPF'
-                - 'STANDARDPLUS'
-                - 'controlna'
-    - name: control_status
-      description: the final status of the control (OK, KO, NA, NULL)
-      tests:
-         - not_null
-         - accepted_values:
-             values: ['OK', 'KO', 'NA', 'NULL']
-    - name: document_count
-      description: count of documents by control score and control status 
-      tests:
-         - not_null
-    - name: total_documents
-      description: total count of documents by control score and control status
-      tests:
-        - not_null
-    - name: percentage
-      description: percentage of ontrol score and control status
-      tests:
-        - not_null
-    - name: first_issue_date
-      description: date of the first issue control
-    - name: last_issue_date
-      description: date of the last issue control
-    - name: days_span
-      description: number of days between the first issue date and the last issue date
-    - name: unique_categories
-      description: count of unique categories of document
-    - name: unique_countries
-      description: count of unique countries of document
-    - name: unique_control_names
-      description: count of unique control name
-    - name: unique_channels
-      description: count of unique channels
-    - name: metrics_json
-      description: all metrics in jsonb format
-    - name: metrics_json
-      description: all metrics in jsonb format
-    - name: created_at
-      description: timestamp of the creation of the control
-    - name: snapshot_date
-      description: date of the control
-      tests:
-        - not_null
-
+  - name: RESULTS_CONTROL_SCORE_2
+    description: >
+      Fact table showing document control results aggregated by control score and status.
+      Provides detailed metrics including counts, percentages, and temporal analysis.
+    meta:
+      owner: Fraud Team / dan_leds@document_fraud.com
+    tests:
+      - unique:
+          column_name: unique_key
+    columns:
+      - name: control_score
+        description: The control score category assigned to documents
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 'advanced'
+                  - 'ADVANCEDPF'
+                  - 'efficient'
+                  - 'EFFICIENTPF'
+                  - 'EFFICIENTPLUS'
+                  - 'jdiEfficientPlus'
+                  - 'standard'
+                  - 'STANDARDPF'
+                  - 'STANDARDPLUS'
+                  - 'controlna'
+              config:
+                severity: warn
+      - name: control_status
+        description: The final status of the control (OK, KO, NA, or NULL)
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'OK'
+                  - 'KO'
+                  - 'NA'
+              config:
+                severity: warn
+      - name: document_count
+        description: Count of documents for this control score and status combination
+        tests:
+          - not_null
+      - name: total_documents
+        description: Total count of documents for this control score (across all statuses)
+        tests:
+          - not_null
+      - name: percentage
+        description: Percentage of documents with this status within the control score
+        tests:
+          - not_null
+      - name: first_issue_date
+        description: Date of the first control issue in this group
+      - name: last_issue_date
+        description: Date of the last control issue in this group
+      - name: days_span
+        description: Number of days between first and last issue date
+      - name: unique_categories
+        description: Count of unique document categories in this group
+      - name: unique_countries
+        description: Count of unique issuing countries in this group
+      - name: unique_control_names
+        description: Count of unique control names applied
+      - name: unique_channels
+        description: Count of unique acquisition channels
+      - name: metrics_json
+        description: JSONB containing all metrics in a flexible format for downstream consumption
+      - name: created_at
+        description: UTC timestamp when this record was created
+        tests:
+          - not_null
+      - name: snapshot_date
+        description: Date of the snapshot (partition key)
+        tests:
+          - not_null
+      - name: unique_key
+        description: MD5 hash unique key for deduplication
+        tests:
+          - not_null

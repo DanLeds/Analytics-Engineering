@@ -1,55 +1,60 @@
 version: 2
+
 models:
-- name: V_STG_DOCUMENTS_CONTROLLED
-  description: This model compiles all documents controlled by our service. Each row is an event of one set of controls is applied to one document.
-  meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
-  tests: 
-  - unique:  
-      column_name: event_id 
-  columns:
-    - name: event_id
-      description: the unique id of the event of the document controlled
-      test:
-        - not_null
-    - name: control_applied_status
-      description: the status of control applied
-    - name: receipt_at
-      description: timestamp of recept of the control
-    - name: document_id 
-      description: The unique id of the document controlled 
-      tests:
-        - not_null
-    - name: control_score
-      description: Score category of the document controlled
-    - name: issue_at
-      description: timestamp of issue of the document after control 
-    - name: control_status
-      description: The status of the control after application to the document
-    - name: control_scores
-      description: category of control for the document.
-    - name: document_face_id
-      description: the id of the document face (recto, verso)
-    - name: document_type
-      description: if is the document face or else
-    - name: control_domain
-      description: if it is kyc or else
-    - name: channel_acquisition_id
-      description: where comes from the applicant (client1, client2...)
-    - name: control_subject
-      description: the control is exercised over the applicant or the document
-    - name: control_name
-      description: the specific area where the control is exercised
-      tests:
-        - accepted_values: ['alternate_family_name_consistency', 
-                            'alternate_family_name_detection', 
-                            'family_name_account_holder_search', 
-                            'family_name_consistency', 
-                            'family_name_search', 
-                            'address_locality_consistency', 
-                            'address_consistency',
-                            'birthdate_mrz_consistency',
-                            'personal_id_consistency',
-                            'bic_iban_consistency',
-                            'date_validation']
- 
+  - name: V_STG_DOCUMENTS_CONTROLLED
+    description: >
+      Staging model that compiles all documents controlled by the fraud detection service.
+      Each row represents a control event where a set of controls is applied to one document.
+    meta:
+      owner: Fraud Team / dan_leds@document_fraud.com
+    tests:
+      - unique:
+          column_name: event_id
+    columns:
+      - name: event_id
+        description: Unique identifier for the control event
+        tests:
+          - not_null
+      - name: control_applied_status
+        description: Overall status of the control application
+      - name: receipt_at
+        description: Timestamp when the control was received
+      - name: document_id
+        description: Unique identifier of the document being controlled
+        tests:
+          - not_null
+      - name: control_score
+        description: Score category assigned to the document
+      - name: issue_at
+        description: Timestamp when the document was issued after control
+      - name: control_status
+        description: Final status of the control (OK, KO, NA, NULL)
+      - name: control_scores
+        description: Detailed control scores category
+      - name: document_face_id
+        description: ID of the document face (recto, verso)
+      - name: document_type
+        description: Type of document face or element
+      - name: control_domain
+        description: Domain of control (kyc, etc.)
+      - name: channel_acquisition_id
+        description: Channel where the applicant came from (client1, client2, etc.)
+      - name: control_subject
+        description: Subject of control - applicant or document
+      - name: control_name
+        description: Specific area where the control is exercised
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'alternate_family_name_consistency'
+                  - 'alternate_family_name_detection'
+                  - 'family_name_account_holder_search'
+                  - 'family_name_consistency'
+                  - 'family_name_search'
+                  - 'address_locality_consistency'
+                  - 'address_consistency'
+                  - 'birthdate_mrz_consistency'
+                  - 'personal_id_consistency'
+                  - 'bic_iban_consistency'
+                  - 'date_validation'

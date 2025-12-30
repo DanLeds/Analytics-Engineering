@@ -1,31 +1,40 @@
 version: 2
+
 models:
-
-- name: CONTROL_RESULTS
-  description: This model shows results of controls by document and by channel acquisition 
-  meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
-  tests:  
-  - unique:    
-      column_name: unique_key
-  columns: 
-    - name: document_id 
-      description: the document identifier control checked 
-      tests:  
-        - not_null 
-    - name: control_status
-      description: the result of the control (OK, KO, NA, NULL)
-    - name: control_name
-      description: the name of the control
-    - name: channel_acquisition_id
-      description: The client where the document was sent
-    - name: document_category
-      description: document category (ID_CARD, PASSPORT...)
-    - name: document_issuing_country
-      description: the issuing country of the document
-    - name: document_issue_year
-      description: the year of document issued
-    - name: issue_at
-      description: the timestamp of the control done  
-
-  
+  - name: CONTROL_RESULTS
+    description: >
+      Aggregate table showing control results across multiple dimensions:
+      control name, channel, document category, country, and year.
+      Each dimension is aggregated separately and unioned together.
+    meta:
+      owner: Fraud Team / dan_leds@document_fraud.com
+    tests:
+      - unique:
+          column_name: unique_key
+    columns:
+      - name: control_client_document
+        description: The dimension value (control name, channel ID, category, country, or year)
+      - name: count_document
+        description: Total count of distinct documents for this dimension
+        tests:
+          - not_null
+      - name: count_ok
+        description: Count of documents with OK status
+      - name: perc_ok
+        description: Percentage of OK status (safe division, no divide by zero)
+      - name: count_ko
+        description: Count of documents with KO status
+      - name: perc_ko
+        description: Percentage of KO status
+      - name: count_na
+        description: Count of documents with NA status
+      - name: perc_na
+        description: Percentage of NA status
+      - name: count_null
+        description: Count of documents with NULL status
+      - name: perc_null
+        description: Percentage of NULL status
+      - name: unique_key
+        description: MD5 hash unique key for deduplication
+        tests:
+          - not_null

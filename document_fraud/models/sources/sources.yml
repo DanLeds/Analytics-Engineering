@@ -1,31 +1,76 @@
 version: 2
 
 sources:
-  - name: CONTROLS           
+  - name: CONTROLS
+    description: Source table containing document control events from the fraud detection system
     schema: public
     database: postgres
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    loaded_at_field: time
     tables:
       - name: test_technique_ae_document_controlled
-        columns: 
-        - name: data_documentcontrolsdata_documentcontrols_anonymized
-        - name: data_documentcontrolsdata_documentfaceids
-        - name: data_documentcontrolsdata_status
-        - name: data_eventdate 
-        - name: doc_id
-        - name: data_score
-        - name: id
-        - name: time
+        description: Raw events of document controls applied by the verification system
+        columns:
+          - name: id
+            description: Unique identifier for each control event
+            tests:
+              - unique
+              - not_null
+          - name: doc_id
+            description: Document identifier being controlled
+            tests:
+              - not_null
+          - name: data_documentcontrolsdata_documentcontrols_anonymized
+            description: JSONB containing anonymized control details and status
+          - name: data_documentcontrolsdata_documentfaceids
+            description: JSONB containing document face identifiers and metadata
+          - name: data_documentcontrolsdata_status
+            description: Overall status of the control application
+          - name: data_eventdate
+            description: Date when the control event occurred
+            tests:
+              - not_null
+          - name: data_score
+            description: Control score category assigned to the document
+          - name: time
+            description: Timestamp when the record was created
+            tests:
+              - not_null
 
-  - name: CREATION   
+  - name: CREATION
+    description: Source table containing document creation events
     schema: public
     database: postgres
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    loaded_at_field: time
     tables:
-      - name: test_technique_ae_document_created 
-        columns: 
-        - name: data_id_id
-        - name: data_acquisitionid_organizationid
-        - name: data_documentclass_documentsubtype
-        - name: data_documentclass_documenttype
-        - name: data_eventdate
-        - name: id
-        - name: time
+      - name: test_technique_ae_document_created
+        description: Raw events of document creations in the system
+        columns:
+          - name: id
+            description: Unique identifier for each creation event
+            tests:
+              - unique
+              - not_null
+          - name: data_id_id
+            description: Document identifier
+            tests:
+              - not_null
+          - name: data_acquisitionid_organizationid
+            description: Organization/channel through which the document was acquired
+          - name: data_documentclass_documentsubtype
+            description: Document subtype classification (contains country and year info)
+          - name: data_documentclass_documenttype
+            description: Document type/category
+          - name: data_eventdate
+            description: Date when the document was created
+            tests:
+              - not_null
+          - name: time
+            description: Timestamp when the record was created
+            tests:
+              - not_null

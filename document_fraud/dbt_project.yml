@@ -15,7 +15,47 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+vars:
+  lookback_days: 730
+  channels:
+    - 'client 1'
+    - 'client 2'
+    - 'client na'
+  document_categories:
+    - 'address_proof'
+    - 'bank_account_details'
+    - 'digitalid'
+    - 'driving_license'
+    - 'id_card'
+    - 'open_banking'
+    - 'passport'
+    - 'payslip'
+    - 'residence_permit'
+    - 'tax_document'
+  control_names:
+    - 'address_consistency'
+    - 'address_locality_consistency'
+    - 'alternate_family_name_consistency'
+    - 'alternate_family_name_detection'
+    - 'bic_iban_consistency'
+    - 'birthdate_mrz_consistency'
+    - 'date_validation'
+    - 'family_name_account_holder_search'
+    - 'family_name_consistency'
+    - 'family_name_search'
+    - 'personal_id_consistency'
+
 models:
-  document_fraud:
+  quicksign_project:
     staging:
       +materialized: view
+      +tags: ["staging"]
+    analyse:
+      +materialized: table
+      +tags: ["nightly_1"]
+
+on-run-start:
+  - "{{ log('Starting dbt run for document_fraud project', info=True) }}"
+
+on-run-end:
+  - "{{ log('Completed dbt run for document_fraud project', info=True) }}"

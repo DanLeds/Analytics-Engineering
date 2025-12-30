@@ -1,36 +1,33 @@
 version: 2
+
 models:
-
-- name: V_CONTROL_SCORE_SUMMARY
-  description: Summary view of RESULTS_CONTROL_SCORE_2 model
-  meta:
-    owner: Fraud Team / dan_leds@document_fraud.com
-
-  columns:   
-    - name: control_score    
-      description: the name of the score control
-      tests:     
-        - not_null  
-    - name: total_documents
-      description: total count of documents
-    - name: count_ok
-      description: count of ok score control
-    - name: perc_ok
-      description: percentage of ok score control
-    - name: count_ko
-      description: count of ko score control
-    - name: perc_ko
-      description: percentage of ko score control
-    - name: count_na
-      description: count of not available score control
-    - name: perc_na
-      description: percentage of not available score control
-    - name: count_null
-      description: count of null value score control
-    - name: perc_ok 
-      description: percentage of ok score control
-    - name: perc_ko
-      description: percentage of ko score control
-    - name: last_update
-      description: last date of the control
-  
+  - name: V_CONTROL_SCORE_SUMMARY
+    description: >
+      Summary view aggregating the latest snapshot from RESULTS_CONTROL_SCORE_2.
+      Provides a quick overview of control scores with their status distributions.
+    meta:
+      owner: Fraud Team / dan_leds@document_fraud.com
+    columns:
+      - name: control_score
+        description: Control score category
+        tests:
+          - not_null
+          - unique
+      - name: total_documents
+        description: Total count of documents for this control score
+        tests:
+          - not_null
+      - name: count_ok
+        description: Count of documents with OK status
+      - name: count_ko
+        description: Count of documents with KO status
+      - name: count_na
+        description: Count of documents with NA status
+      - name: count_null
+        description: Count of documents with NULL/unknown status
+      - name: perc_ok
+        description: Percentage of OK status
+      - name: perc_ko
+        description: Percentage of KO status
+      - name: last_update
+        description: Date of the last snapshot used
