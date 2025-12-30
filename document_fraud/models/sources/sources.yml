@@ -4,7 +4,6 @@ sources:
   - name: CONTROLS
     description: Source table containing document control events from the fraud detection system
     schema: public
-    database: postgres
     freshness:
       warn_after: {count: 24, period: hour}
       error_after: {count: 48, period: hour}
@@ -42,7 +41,6 @@ sources:
   - name: CREATION
     description: Source table containing document creation events
     schema: public
-    database: postgres
     freshness:
       warn_after: {count: 24, period: hour}
       error_after: {count: 48, period: hour}

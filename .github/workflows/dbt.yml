@@ -64,36 +64,26 @@ jobs:
         working-directory: .
         run: |
           PGPASSWORD=dbt_password psql -h localhost -U dbt_user -d dbt_test << 'EOF'
-          CREATE SCHEMA IF NOT EXISTS analytics;
-
-          CREATE TABLE analytics.documents_controlled (
-            event_id VARCHAR(255),
-            control_applied_status VARCHAR(50),
-            receipt_at TIMESTAMP,
-            document_id VARCHAR(255),
-            control_score VARCHAR(50),
-            issue_at TIMESTAMP,
-            control_status VARCHAR(10),
-            control_scores VARCHAR(50),
-            document_face_id VARCHAR(255),
-            document_type VARCHAR(100),
-            control_domain VARCHAR(50),
-            channel_acquisition_id VARCHAR(100),
-            control_subject VARCHAR(50),
-            control_identifier VARCHAR(255)
+          -- Source tables matching sources.yml definitions
+          CREATE TABLE public.test_technique_ae_document_controlled (
+            id VARCHAR(255) PRIMARY KEY,
+            doc_id VARCHAR(255) NOT NULL,
+            data_documentcontrolsdata_documentcontrols_anonymized JSONB,
+            data_documentcontrolsdata_documentfaceids JSONB,
+            data_documentcontrolsdata_status VARCHAR(50),
+            data_eventdate DATE NOT NULL,
+            data_score VARCHAR(50),
+            time TIMESTAMP NOT NULL DEFAULT NOW()
           );
 
-          CREATE TABLE analytics.documents_created (
-            event_id VARCHAR(255),
-            receipt_at TIMESTAMP,
-            issue_at TIMESTAMP,
-            document_id VARCHAR(255),
-            channel_acquisition_id VARCHAR(100),
-            acquisition_type VARCHAR(50),
-            document_subtype VARCHAR(255),
-            document_category VARCHAR(100),
-            document_issuing_country VARCHAR(10),
-            document_issue_year VARCHAR(10)
+          CREATE TABLE public.test_technique_ae_document_created (
+            id VARCHAR(255) PRIMARY KEY,
+            data_id_id VARCHAR(255) NOT NULL,
+            data_acquisitionid_organizationid VARCHAR(100),
+            data_documentclass_documentsubtype VARCHAR(255),
+            data_documentclass_documenttype VARCHAR(100),
+            data_eventdate DATE NOT NULL,
+            time TIMESTAMP NOT NULL DEFAULT NOW()
           );
           EOF
 
