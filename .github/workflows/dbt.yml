@@ -80,6 +80,7 @@ jobs:
             id VARCHAR(255) PRIMARY KEY,
             data_id_id VARCHAR(255) NOT NULL,
             data_acquisitionid_organizationid VARCHAR(100),
+            data_acquisitionid_type VARCHAR(50),
             data_documentclass_documentsubtype VARCHAR(255),
             data_documentclass_documenttype VARCHAR(100),
             data_eventdate DATE NOT NULL,
